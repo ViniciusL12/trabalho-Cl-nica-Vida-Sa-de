@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Nova consulta | Clínica Vida &amp; Saúde{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow"><a href="{{ url_for('consultas') }}">CONSULTAS</a> / NOVO AGENDAMENTO</p><h1>Cadastrar consulta</h1><p class="page-subtitle">Associe um paciente e informe os dados do agendamento.</p></div>
+</div>
+{% if pacientes %}
+<section class="form-panel">
+    <div class="form-intro"><span class="form-icon">▦</span><div><h2>Dados da consulta</h2><p>Preencha as informações do agendamento.</p></div></div>
+    <form method="post" class="form-grid">
+        <div class="field field-full"><label for="paciente_id">Paciente <span>*</span></label><select id="paciente_id" name="paciente_id" required><option value="">Selecione um paciente</option>{% for paciente in pacientes %}<option value="{{ paciente.id }}" {% if consulta.get('paciente_id')|string == paciente.id|string %}selected{% endif %}>{{ paciente.nome }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="data">Data <span>*</span></label><input id="data" name="data" type="date" required value="{{ consulta.get('data', '') }}"></div>
+        <div class="field"><label for="horario">Horário <span>*</span></label><input id="horario" name="horario" type="time" required value="{{ consulta.get('horario', '') }}"></div>
+        <div class="field"><label for="tipo">Tipo ou motivo <span>*</span></label><input id="tipo" name="tipo" required maxlength="120" placeholder="Ex.: Consulta de rotina" value="{{ consulta.get('tipo', '') }}"></div>
+        <div class="field"><label for="status">Status</label><select id="status" name="status">{% for status in statuses %}<option value="{{ status }}" {% if consulta.get('status', 'Agendada') == status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select></div>
+        <div class="field field-full"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" maxlength="1000" placeholder="Informações adicionais (opcional)">{{ consulta.get('observacoes') or '' }}</textarea></div>
+        <div class="form-actions field-full"><a class="button button-light" href="{{ url_for('consultas') }}">Cancelar</a><button class="button button-primary" type="submit">Salvar consulta</button></div>
+    </form>
+</section>
+{% else %}
+<section class="empty-state panel"><span class="empty-icon">♙</span><h3>Cadastre um paciente primeiro</h3><p>Uma consulta precisa estar associada a um paciente.</p><a class="button button-primary" href="{{ url_for('cadastrar_paciente') }}">Cadastrar paciente</a></section>
+{% endif %}
+{% endblock %}

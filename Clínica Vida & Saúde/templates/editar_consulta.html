@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Editar consulta | Clínica Vida &amp; Saúde{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow"><a href="{{ url_for('consultas') }}">CONSULTAS</a> / EDITAR AGENDAMENTO</p><h1>Editar consulta</h1><p class="page-subtitle">Atualize o agendamento ou altere o status.</p></div>
+</div>
+<section class="form-panel">
+    <div class="form-intro"><span class="form-icon">▦</span><div><h2>Dados da consulta</h2><p>Preencha as informações do agendamento.</p></div></div>
+    <form method="post" class="form-grid">
+        <div class="field field-full"><label for="paciente_id">Paciente <span>*</span></label><select id="paciente_id" name="paciente_id" required>{% for paciente in pacientes %}<option value="{{ paciente.id }}" {% if consulta.paciente_id|string == paciente.id|string %}selected{% endif %}>{{ paciente.nome }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="data">Data <span>*</span></label><input id="data" name="data" type="date" required value="{{ consulta.data }}"></div>
+        <div class="field"><label for="horario">Horário <span>*</span></label><input id="horario" name="horario" type="time" required value="{{ consulta.horario }}"></div>
+        <div class="field"><label for="tipo">Tipo ou motivo <span>*</span></label><input id="tipo" name="tipo" required maxlength="120" value="{{ consulta.tipo }}"></div>
+        <div class="field"><label for="status">Status</label><select id="status" name="status">{% for status in statuses %}<option value="{{ status }}" {% if consulta.status == status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select></div>
+        <div class="field field-full"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" maxlength="1000">{{ consulta.observacoes or '' }}</textarea></div>
+        <div class="form-actions field-full"><a class="button button-light" href="{{ url_for('consultas') }}">Cancelar</a><button class="button button-primary" type="submit">Salvar alterações</button></div>
+    </form>
+</section>
+{% endblock %}

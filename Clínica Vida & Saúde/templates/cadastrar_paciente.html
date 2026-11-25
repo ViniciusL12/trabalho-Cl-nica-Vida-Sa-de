@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Novo paciente | Clínica Vida &amp; Saúde{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow"><a href="{{ url_for('pacientes') }}">PACIENTES</a> / NOVO CADASTRO</p><h1>Cadastrar paciente</h1><p class="page-subtitle">Preencha as informações do cadastro.</p></div>
+</div>
+<section class="form-panel">
+    <div class="form-intro"><span class="form-icon">♙</span><div><h2>Dados do paciente</h2><p>Os campos marcados com * são obrigatórios.</p></div></div>
+    <form method="post" class="form-grid">
+        <div class="field field-full"><label for="nome">Nome completo <span>*</span></label><input id="nome" name="nome" required maxlength="120" placeholder="Ex.: Joana da Silva" value="{{ request.form.get('nome', '') }}"></div>
+        <div class="field"><label for="nascimento">Data de nascimento</label><input id="nascimento" name="nascimento" type="date" value="{{ request.form.get('nascimento', '') }}"></div>
+        <div class="field"><label for="telefone">Telefone</label><input id="telefone" name="telefone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="15" placeholder="(00) 00000-0000" value="{{ request.form.get('telefone', '') }}"></div>
+        <div class="field field-full"><label for="email">E-mail</label><input id="email" name="email" type="email" maxlength="160" placeholder="nome@exemplo.com" value="{{ request.form.get('email', '') }}"></div>
+        <div class="field field-full"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" rows="4" maxlength="1000" placeholder="Informações adicionais (opcional)">{{ request.form.get('observacoes', '') }}</textarea></div>
+        <div class="form-actions field-full"><a class="button button-light" href="{{ url_for('pacientes') }}">Cancelar</a><button class="button button-primary" type="submit">Salvar paciente</button></div>
+    </form>
+</section>
+{% endblock %}

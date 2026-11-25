@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Consultas | Clínica Vida &amp; Saúde{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow">AGENDA</p><h1>Consultas</h1><p class="page-subtitle">Gerencie os agendamentos e acompanhe os status.</p></div>
+    <a class="button button-primary" href="{{ url_for('cadastrar_consulta') }}"><span aria-hidden="true">＋</span> Nova consulta</a>
+</div>
+<section class="panel">
+    <div class="list-toolbar">
+        <div><h2>Agendamentos</h2><p class="muted">{{ consultas|length }} consulta(s)</p></div>
+        <form class="filter-form" method="get" action="{{ url_for('consultas') }}">
+            <label for="status-filtro">Filtrar status</label>
+            <select id="status-filtro" name="status" onchange="this.form.submit()">
+                <option value="">Todos os status</option>
+                {% for status in statuses %}<option value="{{ status }}" {% if status_filtro == status %}selected{% endif %}>{{ status }}</option>{% endfor %}
+            </select>
+        </form>
+    </div>
+    {% if consultas %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Paciente</th><th>Data e horário</th><th>Tipo</th><th>Status</th><th class="actions-heading">Ações</th></tr></thead>
+            <tbody>
+            {% for consulta in consultas %}
+                <tr>
+                    <td><span class="person-cell"><span class="table-avatar">{{ consulta.paciente_nome[:1]|upper }}</span><strong>{{ consulta.paciente_nome }}</strong></span></td>
+                    <td>{{ consulta.data }} <span class="muted">às {{ consulta.horario }}</span></td><td>{{ consulta.tipo }}</td>
+                    <td><span class="status status-{{ consulta.status|lower|replace('í', 'i') }}">{{ consulta.status }}</span></td>
+                    <td class="row-actions">
+                        <a class="icon-button" href="{{ url_for('editar_consulta', consulta_id=consulta.id) }}" aria-label="Editar consulta de {{ consulta.paciente_nome }}" title="Editar e alterar status">✎</a>
+                        <form method="post" action="{{ url_for('excluir_consulta', consulta_id=consulta.id) }}" data-confirm="Deseja excluir esta consulta?">
+                            <button class="icon-button danger-action" type="submit" aria-label="Excluir consulta de {{ consulta.paciente_nome }}" title="Excluir">⌫</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><span class="empty-icon">▦</span><h3>Nenhuma consulta encontrada</h3><p>{% if status_filtro %}Não há consultas com esse status.{% else %}Cadastre uma consulta para organizar a agenda.{% endif %}</p><a class="button button-secondary" href="{{ url_for('cadastrar_consulta') }}">Cadastrar consulta</a></div>
+    {% endif %}
+</section>
+{% endblock %}

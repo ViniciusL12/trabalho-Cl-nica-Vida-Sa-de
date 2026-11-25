@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Pacientes | Clínica Vida &amp; Saúde{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow">CADASTROS</p><h1>Pacientes</h1><p class="page-subtitle">Consulte e mantenha os cadastros organizados.</p></div>
+    <a class="button button-primary" href="{{ url_for('cadastrar_paciente') }}"><span aria-hidden="true">＋</span> Novo paciente</a>
+</div>
+<section class="panel">
+    <div class="list-toolbar">
+        <div><h2>Todos os pacientes</h2><p class="muted">{{ pacientes|length }} resultado(s){% if termo %} para “{{ termo }}”{% endif %}</p></div>
+        <form class="search-form" method="get" action="{{ url_for('pacientes') }}">
+            <label class="sr-only" for="busca-paciente">Pesquisar pacientes</label>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="busca-paciente" type="search" name="q" value="{{ termo }}" placeholder="Nome, telefone ou e-mail">
+            <button type="submit" class="button button-secondary button-small">Pesquisar</button>
+            {% if termo %}<a class="clear-search" href="{{ url_for('pacientes') }}">Limpar</a>{% endif %}
+        </form>
+    </div>
+    {% if pacientes %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Paciente</th><th>Telefone</th><th>E-mail</th><th>Nascimento</th><th class="actions-heading">Ações</th></tr></thead>
+            <tbody>
+            {% for paciente in pacientes %}
+                <tr>
+                    <td><span class="person-cell"><span class="table-avatar">{{ paciente.nome[:1]|upper }}</span><strong>{{ paciente.nome }}</strong></span></td>
+                    <td>{{ paciente.telefone or '—' }}</td><td>{{ paciente.email or '—' }}</td><td>{{ paciente.nascimento or '—' }}</td>
+                    <td class="row-actions">
+                        <a class="icon-button" href="{{ url_for('editar_paciente', paciente_id=paciente.id) }}" aria-label="Editar {{ paciente.nome }}" title="Editar">✎</a>
+                        <form method="post" action="{{ url_for('excluir_paciente', paciente_id=paciente.id) }}" data-confirm="Excluir este paciente? Só é possível excluir pacientes sem consultas vinculadas.">
+                            <button class="icon-button danger-action" type="submit" aria-label="Excluir {{ paciente.nome }}" title="Excluir">⌫</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><span class="empty-icon">♙</span><h3>{% if termo %}Nenhum resultado encontrado{% else %}Ainda não há pacientes{% endif %}</h3><p>{% if termo %}Tente pesquisar por outro nome, telefone ou e-mail.{% else %}Cadastre o primeiro paciente para começar.{% endif %}</p>{% if not termo %}<a class="button button-secondary" href="{{ url_for('cadastrar_paciente') }}">Cadastrar paciente</a>{% endif %}</div>
+    {% endif %}
+</section>
+{% endblock %}

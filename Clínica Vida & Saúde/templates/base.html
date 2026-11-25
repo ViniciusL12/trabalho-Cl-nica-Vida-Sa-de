@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102a43">
+    <script>
+        (function () {
+            const temaSalvo = localStorage.getItem("clinica-tema");
+            if (temaSalvo === "escuro") {
+                document.documentElement.dataset.theme = "dark";
+            }
+        }());
+    </script>
+    <title>{% block title %}Clínica Vida &amp; Saúde{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" href="{{ url_for('index') }}" aria-label="Clínica Vida e Saúde - início">
+                <span class="brand-mark" aria-hidden="true">+</span>
+                <span><strong>Vida &amp; Saúde</strong><small>CLÍNICA</small></span>
+            </a>
+            <p class="nav-caption">MENU PRINCIPAL</p>
+            <nav class="main-nav" aria-label="Navegação principal">
+                <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}"><span class="nav-icon">⌂</span> Visão geral</a>
+                <a class="nav-link {% if request.endpoint in ['pacientes', 'cadastrar_paciente', 'editar_paciente'] %}active{% endif %}" href="{{ url_for('pacientes') }}"><span class="nav-icon">♙</span> Pacientes</a>
+                <a class="nav-link {% if request.endpoint in ['consultas', 'cadastrar_consulta', 'editar_consulta'] %}active{% endif %}" href="{{ url_for('consultas') }}"><span class="nav-icon">▦</span> Consultas</a>
+            </nav>
+            <div class="sidebar-note">
+                <span class="note-icon">i</span>
+                <p>Ambiente demonstrativo<br><small>Use somente dados fictícios.</small></p>
+            </div>
+            <div class="sidebar-footer">Clínica Vida &amp; Saúde<br><span>Gestão simples e organizada</span></div>
+        </aside>
+
+        <main class="main-area">
+            <header class="topbar">
+                <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+                <div class="topbar-title">Portal de gestão <span class="topbar-dot">•</span> <span>Área administrativa</span></div>
+                <div class="topbar-actions">
+                    <button class="theme-toggle" type="button" aria-label="Ativar modo escuro" title="Alternar modo escuro">
+                        <span class="theme-icon" aria-hidden="true">☾</span>
+                        <span class="theme-label">Modo escuro</span>
+                    </button>
+                    <div class="topbar-profile"><span class="profile-avatar">VS</span><span>Equipe da clínica</span></div>
+                </div>
+            </header>
+            <section class="page-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-stack" aria-live="polite">
+                            {% for category, message in messages %}
+                                <div class="flash flash-{{ category }}">{{ message }}<button type="button" class="flash-close" aria-label="Fechar mensagem">×</button></div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+                <footer class="page-footer">Clínica Vida &amp; Saúde <span>·</span> Sistema demonstrativo com dados fictícios</footer>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
