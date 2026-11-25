@@ -1,1 +1,0 @@
-# trabalho-Cl-nica-Vida-Sa-de
